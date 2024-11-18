@@ -23,8 +23,19 @@ def import_and_predict(image, model):
     size = (150, 150)  # Resize to the expected input size of the model
     image = image.resize(size)
     image = np.asarray(image)
+    
+    # Debugging: Print the shape of the image
+    st.write(f"Image shape after resizing: {image.shape}")
+    
+    if image.shape[-1] == 4:  # If the image has an alpha channel, remove it
+        image = image[..., :3]
+    
     image = image / 255.0  # Normalize the image to [0, 1]
     image = np.expand_dims(image, axis=0)  # Add batch dimension
+    
+    # Debugging: Print the shape of the image after adding batch dimension
+    st.write(f"Image shape after adding batch dimension: {image.shape}")
+    
     predictions = model.predict(image)
     return predictions
 
