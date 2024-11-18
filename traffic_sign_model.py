@@ -12,6 +12,9 @@ def main():
     else:
         image = Image.open(file)
         st.image(image, use_column_width=True)
+        #convert the image to a 1D vector of length 25920
+        image = np.asarray(image).flatten()
+        st.write(image.shape)
         predictions = import_and_predict(file, model)
         score = tf.nn.softmax(predictions[0])
         st.write("This image most likely belongs to {} with a {:.2f} percent confidence."
