@@ -13,19 +13,18 @@ def main():
     else:
         image = Image.open(file)
         st.image(image, use_column_width=True)
-        predictions = import_and_predict(file, model)
+        predictions = import_and_predict(image, model)
         score = tf.nn.softmax(predictions[0])
         st.write("This image most likely belongs to {} with a {:.2f} percent confidence."
         .format(class_names[np.argmax(score)], 100 * np.max(score)))
         st.write("The model is trained on the following classes: ", class_names)
 
-def import_and_predict(image_data, model):
-    size = (30, 30)
-    image = Image.open(image_data)
+def import_and_predict(image, model):
+    size = (150, 150)  # Resize to the expected input size of the model
     image = image.resize(size)
     image = np.asarray(image)
-    image = image.flatten()  # Flatten the image to match the model's input shape
-    image = image.reshape(1, -1)  # Reshape to (1, 25920)
+    image = image / 255.0  # Normalize the image to [0, 1]
+    image = np.expand_dims(image, axis=0)  # Add batch dimension
     predictions = model.predict(image)
     return predictions
 
