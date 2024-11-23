@@ -2,12 +2,39 @@ import tensorflow as tf
 import numpy as np
 import streamlit as st
 from PIL import Image
+import os
+
+st.set_option('deprecation.showfileUploaderEncoding', False)
+@st.cache(allow_output_mutation=True)
+
+      
+def load_model():
+    model = tf.keras.models.load_model('traffic_sign_model.h5')
+    return model
+
+def import_and_predict(image_data, model):
+        img= Image.open(image_data)
+        img_array = tf.keras.preprocessing.image.img_to_array(img)
+        img_array = tf.expand_dims(img_array, 0)
+        predictions = model.predict(img_array)
+        score = tf.nn.softmax(predictions[0])
+        class_names=['Speed limit (20km/h)', 'Speed limit (30km/h)', 'Speed limit (50km/h)', 'Speed limit (60km/h)', 'Speed limit (70km/h)', 'Speed limit (80km/h)', 'End of speed limit (80km/h)', 'Speed limit (100km/h)', 'Speed limit (120km/h)', 'No passing', 'No passing for vehicles over 3.5 metric tons', 'Right-of-way at the next intersection', 'Priority road', 'Yield', 'Stop', 'No vehicles', 'Vehicles over 3.5 metric tons prohibited', 'No entry', 'General caution', 'Dangerous curve to the left', 'Dangerous curve to the right', 'Double curve', 'Bumpy road', 'Slippery road', 'Road narrows on the right', 'Road work', 'Traffic signals', 'Pedestrians', 'Children crossing', 'Bicycles crossing', 'Beware of ice/snow', 'Wild animals crossing', 'End of all speed and passing limits', 'Turn right ahead', 'Turn left ahead', 'Ahead only', 'Go straight or right', 'Go straight or left', 'Keep right', 'Keep left', 'Roundabout mandatory', 'End of no passing', 'End of no passing by vehicles over 3.5 metric tons']
+
+        print(
+        "This image most likely belongs to {} with a {:.2f} percent confidence."
+        .format(class_names[np.argmax(score)], 100 * np.max(score))
+        )
+        
+        return predictions
 
 def main():
-    st.set_page_config(page_title="Traffic Sign Recognition", page_icon="🚦", layout="centered", initial_sidebar_state="expanded")
     st.title("Traffic Sign Recognition")
-    st.write("This is a simple image classification web app to predict traffic signs")
+    st.text("Provide an image of a traffic sign for classification")
+    
+    model = load_model()
+    
     file = st.file_uploader("Please upload an image file", type=["jpg", "png"])
+    
     if file is None:
         st.text("Please upload an image file")
     else:
@@ -15,32 +42,9 @@ def main():
         st.image(image, use_column_width=True)
         predictions = import_and_predict(image, model)
         score = tf.nn.softmax(predictions[0])
-        st.write("This image most likely belongs to {} with a {:.2f} percent confidence."
-        .format(class_names[np.argmax(score)], 100 * np.max(score)))
-        st.write("The model is trained on the following classes: ", class_names)
+        class_names=['Speed limit (20km/h)', 'Speed limit (30km/h)', 'Speed limit (50km/h)', 'Speed limit (60km/h)', 'Speed limit (70km/h)', 'Speed limit (80km/h)', 'End of speed limit (80km/h)', 'Speed limit (100km/h)', 'Speed limit (120km/h)', 'No passing', 'No passing for vehicles over 3.5 metric tons', 'Right-of-way at the next intersection', 'Priority road', 'Yield', 'Stop', 'No vehicles', 'Vehicles over 3.5 metric tons prohibited', 'No entry', 'General caution', 'Dangerous curve to the left', 'Dangerous curve to the right', 'Double curve', 'Bumpy road', 'Slippery road', 'Road narrows on the right', 'Road work', 'Traffic signals', 'Pedestrians', 'Children crossing', 'Bicycles crossing', 'Beware of ice/snow', 'Wild animals crossing', 'End of all speed and passing limits', 'Turn right ahead', 'Turn left ahead', 'Ahead only', 'Go straight or right', 'Go straight or left', 'Keep right', 'Keep left', 'Roundabout mandatory', 'End of no passing', 'End of no passing by vehicles over 3.5 metric tons']
 
-def import_and_predict(image, model):
-    size = (150, 150)  # Resize to the expected input size of the model
-    image = image.resize(size)
-    image = np.asarray(image)
-    
-    # Debugging: Print the shape of the image
-    st.write(f"Image shape after resizing: {image.shape}")
-    
-    if image.shape[-1] == 4:  # If the image has an alpha channel, remove it
-        image = image[..., :3]
-    
-    image = image / 255.0  # Normalize the image to [0, 1]
-    image = np.expand_dims(image, axis=0)  # Add batch dimension
-    
-    # Debugging: Print the shape of the image after adding batch dimension
-    st.write(f"Image shape after adding batch dimension: {image.shape}")
-    
-    predictions = model.predict(image)
-    return predictions
-
-model = tf.keras.models.load_model("traffic_sign_model.h5")
-class_names = ['Speed limit (20km/h)', 'Speed limit (30km/h)', 'Speed limit (50km/h)', 'Speed limit (60km/h)', 'Speed limit (70km/h)', 'Speed limit (80km/h)', 'End of speed limit (80km/h)', 'Speed limit (100km/h)', 'Speed limit (120km/h)', 'No passing', 'No passing for vehicles over 3.5 metric tons', 'Right-of-way at the next intersection', 'Priority road', 'Yield', 'Stop', 'No vehicles', 'Vehicles over 3.5 metric tons prohibited', 'No entry', 'General caution', 'Dangerous curve to the left', 'Dangerous curve to the right', 'Double curve', 'Bumpy road', 'Slippery road', 'Road narrows on the right', 'Road work', 'Traffic signals', 'Pedestrians', 'Children crossing', 'Bicycles crossing', 'Beware of ice/snow', 'Wild animals crossing', 'End of all speed and passing limits', 'Turn right ahead', 'Turn left ahead', 'Ahead only', 'Go straight or right', 'Go straight or left', 'Keep right', 'Keep left', 'Roundabout mandatory', 'End of no passing', 'End of no passing by vehicles over 3.5 metric tons']
-
-if __name__ == "__main__":
-    main()
+        st.write(
+            "This image most likely belongs to {} with a {:.2f} percent confidence."
+            .format(class_names[np.argmax(score)], 100 * np.max(score))
+        )
