@@ -5,8 +5,6 @@ from PIL import Image
 import os
 
 
-@st.cache(allow_output_mutation=True)
-
       
 def load_model():
     model = tf.keras.models.load_model('traffic_sign_model.h5')
