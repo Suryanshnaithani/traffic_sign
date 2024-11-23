@@ -11,7 +11,8 @@ def load_model():
     return model
 
 def import_and_predict(image_data, model):
-        img_array = tf.keras.preprocessing.image.img_to_array(image_data)
+        img = tf.keras.preprocessing.image.load_img(image_data, target_size=(150, 150))
+        img_array = tf.keras.preprocessing.image.img_to_array(img)
         img_array = tf.expand_dims(img_array, 0)
         predictions = model.predict(img_array)
         score = tf.nn.softmax(predictions[0])
