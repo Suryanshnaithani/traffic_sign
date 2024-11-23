@@ -46,3 +46,8 @@ def main():
             "This image most likely belongs to {} with a {:.2f} percent confidence."
             .format(class_names[np.argmax(score)], 100 * np.max(score))
         )
+
+
+if __name__ == '__main__':
+    main()
+    
