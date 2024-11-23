@@ -11,8 +11,7 @@ def load_model():
     return model
 
 def import_and_predict(image_data, model):
-        img= Image.open(image_data)
-        img_array = tf.keras.preprocessing.image.img_to_array(img)
+        img_array = tf.keras.preprocessing.image.img_to_array(image_data)
         img_array = tf.expand_dims(img_array, 0)
         predictions = model.predict(img_array)
         score = tf.nn.softmax(predictions[0])
@@ -47,7 +46,5 @@ def main():
             .format(class_names[np.argmax(score)], 100 * np.max(score))
         )
 
-
 if __name__ == '__main__':
     main()
-    
