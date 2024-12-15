@@ -34,68 +34,8 @@ def main():
         image = Image.open(file)
         st.image(image, use_column_width=True)
         predictions = import_and_predict(image, model)
-        class_names = [
-    "Speed limit (5km/h)",
-    "Speed limit (15km/h)",
-    "Speed limit (30km/h)",
-    "Speed limit (40km/h)",
-    "Speed limit (50km/h)",
-    "Speed limit (60km/h)",
-    "Speed limit (70km/h)",
-    "Speed limit (80km/h)",
-    "Don't Go straight or left",
-    "Don't Go straight or right",
-    "Don't Go straight",
-    "Don't Go left",
-    "Don't Go left or right",
-    "Don't Go right",
-    "Don't overtake from left",
-    "No U-turn",
-    "No Car",
-    "No horn",
-    "Speed limit (40km/h)",
-    "Speed limit (50km/h)",
-    "Go straight or right",
-    "Go straight",
-    "Go left",
-    "Go left or right",
-    "Go right",
-    "Keep left",
-    "Keep right",
-    "Roundabout mandatory",
-    "Watch out for cars",
-    "Horn",
-    "Bicycles crossing",
-    "U-turn",
-    "Road Divider",
-    "Traffic signals",
-    "Danger Ahead",
-    "Zebra Crossing",
-    "Bicycles crossing",
-    "Children crossing",
-    "Dangerous curve to the left",
-    "Dangerous curve to the right",
-    "Unknown1",
-    "Unknown2",
-    "Unknown3",
-    "Go right or straight",
-    "Go left or straight",
-    "Unknown4",
-    "ZigZag Curve",
-    "Train Crossing",
-    "Under Construction",
-    "Unknown5",
-    "Fences",
-    "Heavy Vehicle Accidents",
-    "Unknown6",
-    "Give Way",
-    "No stopping",
-    "No entry",
-    "Unknown7",
-    "Unknown8"
-]
-        st.write("This image most likely belongs to {} with a {:.2f} percent confidence."
-                 .format(class_names[np.argmax(predictions[0])], 100 * np.max(predictions[0])))
+        st.write("This image most likely belongs to class {} with a {:.2f} percent confidence."
+             .format(np.argmax(predictions[0]), 100 * np.max(predictions[0])))
         
         
 
